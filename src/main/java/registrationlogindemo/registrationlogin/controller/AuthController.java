@@ -1,6 +1,7 @@
 package registrationlogindemo.registrationlogin.controller;
 
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,11 +18,8 @@ import java.util.List;
 @Controller
 public class AuthController {
 
+    @Autowired
     private UserService userService;
-
-    public AuthController(UserService userService) {
-        this.userService = userService;
-    }
 
     @GetMapping("/login")
     public String login(){
