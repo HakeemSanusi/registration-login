@@ -2,6 +2,8 @@ package registrationlogindemo.registrationlogin.controller;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -40,9 +42,9 @@ public class AuthController {
     }
 
     @PostMapping("/register/save")
-    public String registration(@Valid @ModelAttribute("user") UserDto userDto,
-                               BindingResult result,
-                               Model model){
+    public ResponseEntity<UserDto> registration(@Valid @ModelAttribute("user") UserDto userDto,
+                                                BindingResult result,
+                                                Model model){
         User existingUser = userService.findUserByEmail(userDto.getEmail());
 
         if(existingUser != null && !StringUtils.isEmptyOrWhitespace(existingUser.getEmail())){
@@ -52,11 +54,11 @@ public class AuthController {
 
         if(result.hasErrors()){
             model.addAttribute("user", userDto);
-            return "/register";
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(userDto);
         }
 
         userService.saveUser(userDto);
-        return "redirect:/register?success";
+        return ResponseEntity.status(HttpStatus.OK).body(userDto);
     }
 
     @GetMapping("/users")
